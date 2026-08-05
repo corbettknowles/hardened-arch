@@ -76,7 +76,7 @@ jobs:
           for buildscript in build_hardened_arch_*.py; do
             [ -f "$buildscript" ] || continue
             echo "Extracting INSTALLER_SCRIPT from: $buildscript"
-            python3 .github/scripts/extract_installer.py "$buildscript"
+            python3 .github/workflows/scripts/extract_installer.py "$buildscript"
             if [ -f /tmp/installer_extracted.sh ]; then
               bash -n /tmp/installer_extracted.sh
               rm /tmp/installer_extracted.sh
