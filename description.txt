@@ -1,0 +1,7 @@
+Hardened Arch Linux (XFCE Edition) is a from-scratch, security-focused Arch Linux distribution built around a custom hardened kernel, XFCE 4.20, SDDM, and Limine.
+
+Every component is deliberately audited rather than inherited wholesale — unnecessary attack surface (Flatpak, unused GPU drivers, heavyweight optional dependencies) is stripped out, while genuinely useful tools run standalone: Kate, Dolphin, and KMag work cleanly on XFCE via KDE Frameworks 6 without requiring Plasma. Firefox and Chromium are both included as official Arch builds. BlackArch's security-tools repository is pre-configured for testers and researchers.
+
+Live media boots without a password prompt (physical possession already grants that access); installed systems require full, real authentication.
+
+An active, alpha-stage project by a solo developer, welcoming testers. See KNOWN_ISSUES.md before reporting bugs, and BUILD_NOTES.md for technical detail.
