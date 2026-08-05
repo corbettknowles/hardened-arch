@@ -1,0 +1,103 @@
+name: CI Checks
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+    # pull_request (rather than pull_request_target) is intentional here:
+    # it runs against the fork's own code with a read-only, restricted
+    # GITHUB_TOKEN and no access to repo secrets. That's the correct,
+    # safe default for untrusted external contributions. Do not switch
+    # this to pull_request_target without understanding the security
+    # implications (it grants write-scoped secrets to fork-submitted code).
+
+permissions:
+  contents: read
+
+jobs:
+  validate-python:
+    name: Validate Python build scripts
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Compile-check all Python files
+        run: |
+          set -e
+          find . -name "*.py" -not -path "./.git/*" -print0 \
+            | xargs -0 -n1 python3 -m py_compile
+          echo "All Python files compiled cleanly."
+
+      - name: Check for accidental hardcoded developer paths
+        run: |
+          set -e
+          # This project has a documented history of a real developer's
+          # username/home directory leaking into build output. Fail CI if
+          # any committed source file references a personal path pattern
+          # that shouldn't be hardcoded into shared project files.
+          if grep -rn "/home/[a-z]*/" --include="*.py" . \
+             | grep -v "/home/hardened" \
+             | grep -vE "^\./\.git/"; then
+            echo "::error::Found a hardcoded non-'hardened' home path in a Python file. Review before merging."
+            exit 1
+          fi
+          echo "No unexpected hardcoded developer paths found."
+
+  validate-shell:
+    name: Validate embedded/standalone shell scripts
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Syntax-check standalone shell scripts
+        run: |
+          set -e
+          found=0
+          while IFS= read -r -d '' script; do
+            found=1
+            echo "Checking: $script"
+            bash -n "$script"
+          done < <(find . -name "*.sh" -o -name "hardened-*" -type f -print0 2>/dev/null)
+          if [ "$found" -eq 0 ]; then
+            echo "No standalone shell scripts found to check."
+          fi
+
+      - name: Extract and syntax-check INSTALLER_SCRIPT from build scripts
+        run: |
+          set -e
+          for buildscript in build_hardened_arch_*.py; do
+            [ -f "$buildscript" ] || continue
+            echo "Extracting INSTALLER_SCRIPT from: $buildscript"
+            python3 .github/scripts/extract_installer.py "$buildscript"
+            if [ -f /tmp/installer_extracted.sh ]; then
+              bash -n /tmp/installer_extracted.sh
+              rm /tmp/installer_extracted.sh
+            fi
+          done
+
+  markdown-check:
+    name: Check documentation files exist and are non-empty
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Verify required docs are present
+        run: |
+          set -e
+          required_docs="README.md CONTRIBUTING.md"
+          for doc in $required_docs; do
+            if [ ! -s "$doc" ]; then
+              echo "::error::Required documentation file missing or empty: $doc"
+              exit 1
+            fi
+          done
+          echo "Required documentation present."
