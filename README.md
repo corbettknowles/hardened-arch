@@ -1,12 +1,50 @@
-<p align="center">
-  <img src="assets/banner.png" alt="Hardened Arch Linux" width="100%"/>
-</p>
+<div align="center">
 
-<h1 align="center">Hardened Arch Linux — XFCE Edition</h1>
+<img src="assets/banner.png" alt="Project Banner" width="100%">
 
+# Arch XFCE ISO Builder
 
+**A custom Arch Linux–based XFCE ISO build system**
 
+> **Disclaimer:** This project is an independent, community-developed project and is **not affiliated with, sponsored by, endorsed by, or otherwise associated with Arch Linux or the Arch Linux project.**
+>
+> **Arch Linux and related names, logos, and trademarks are the property of their respective owners.** This project does not claim ownership of, or any rights to, Arch Linux trademarks. The use of the name "Arch Linux" is solely to accurately describe the base technology and compatibility of this project.
 
+</div>
+
+> [!WARNING]
+>
+> ## ⚠️ Important — `build_arch_xfce_iso.py`
+>
+> **Please use caution when modifying the main body of `build_arch_xfce_iso.py`.**
+>
+> This is **not simply a Python script**. It is an **ISO builder** that coordinates multiple stages of the build process, including filesystem preparation, package integration, system configuration, boot configuration, and final ISO generation.
+>
+> Changes that appear minor in one section can produce **undesirable or unexpected results elsewhere in the build**. A modification may not immediately produce an error while still resulting in an incomplete, improperly configured, or otherwise broken ISO.
+>
+> ### 🛠️ Open Source & Creativity
+>
+> **Experimentation is absolutely encouraged.**
+>
+> This project is open source, and you're welcome to modify the builder, add features, restructure components, fork the project, or completely rethink how something works.
+>
+> Just keep in mind that the build system contains **interdependent components**. Before changing core build logic:
+>
+> * Understand what the section you're modifying is responsible for.
+> * Check how other build stages depend on it.
+> * Test the **complete ISO build** after significant changes.
+> * Test the resulting ISO rather than relying solely on the Python script completing successfully.
+> * Use Git branches or backups when experimenting with major changes.
+>
+> **In short:**
+>
+> > **Be creative. Experiment. Break things. Fix things. Improve things.**
+> >
+> > Just remember that `build_arch_xfce_iso.py` is an **ISO build system**, not a disposable Python script.
+>
+> A successful execution of the builder does **not automatically mean that the resulting ISO is correct**.
+>
+> **Have fun hacking on it — and keep an eye on what the builder is actually doing. 😉**
 
 # Hardened Arch Linux — XFCE Edition (Alpha 1.10)
 
