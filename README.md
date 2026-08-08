@@ -1,3 +1,13 @@
+<p align="center">
+  <img src="assets/banner.png" alt="Hardened Arch Linux" width="100%"/>
+</p>
+
+<h1 align="center">Hardened Arch Linux — XFCE Edition</h1>
+
+
+
+
+
 # Hardened Arch Linux — XFCE Edition (Alpha 1.10)
 
 A from-scratch, security-hardened Arch Linux distribution built around
